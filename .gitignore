@@ -37,3 +37,4 @@ doc/
 .idea
 .secret
 .init_doku
+/coverage
