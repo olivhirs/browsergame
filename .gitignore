@@ -37,4 +37,5 @@ doc/
 .idea
 .secret
 .init_doku
+/config/local_env.yml
 /coverage

@@ -77,4 +77,21 @@ Browsergame::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+  
+  
+  # ActionMailer Config
+  # Setup for production - deliveries, no errors raised
+  config.action_mailer.default_url_options = { :host => 'https://immense-dawn-5926.herokuapp.com/' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default :charset => "utf-8"
+  config.action_mailer.smtp_settings = {
+    :address => "smtp.gmail.com",
+    :port => 587,
+    :domain => 'https://immense-dawn-5926.herokuapp.com/',
+    :user_name => ENV["GMAIL_PROD_USERNAME"],
+    :password => ENV["GMAIL_PROD_PASSWORD"],
+    :authentication => 'plain',
+    :enable_starttls_auto => true } 
 end
