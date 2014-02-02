@@ -4,5 +4,6 @@ FactoryGirl.define do
     email    "oliver.hirschmann@gmx.de"
     password "foobar"
     password_confirmation "foobar"
+    password_reset_token "blubb_blubb"
   end
 end

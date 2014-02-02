@@ -4,7 +4,7 @@ describe UserMailer do
   
   before do
     @user = User.new(name: "Example User", email: "user@example.com",
-                     password: "foobar", password_confirmation: "foobar")
+                     password: "foobar", password_confirmation: "foobar", password_reset_token: "123")
   end
   
   subject { @user }
@@ -32,5 +32,33 @@ describe UserMailer do
       mail.body.encoded.should match(@user.name)
     end
  
+  end
+  
+  describe 'password_reset_mail' do
+    let(:mail) { UserMailer.password_reset(@user) }
+ 
+    it 'renders the subject' do
+      mail.subject.should == 'Fire&RescueGame - Password Reset'
+    end
+ 
+    it 'renders the receiver email' do
+      mail.to.should == [@user.email]
+    end
+ 
+    it 'renders the sender email' do
+      mail.from.should == ['finalfprofi@fantasymail.de']
+    end
+ 
+    it 'assigns site name' do
+      mail.body.encoded.should match("requested a password reset")
+    end
+    
+    it 'assigns @name' do
+      mail.body.encoded.should match(@user.name)
+    end
+    
+    it 'assigns @password_reset_url' do
+      mail.body.encoded.should match("password_reset\\?id=")
+    end
   end
 end

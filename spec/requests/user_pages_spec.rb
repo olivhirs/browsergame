@@ -90,6 +90,84 @@ describe "User pages" do
         specify { expect(user.reload.email).to eq new_email }
       end
     end
+   end 
+   
+  describe "forgot_password" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:submit) { "Send Password Reset Instructions" }
+    before { visit forgot_password_path }
+    
+    describe "forgot_password_link" do
+      before { visit signin_path }
+      it { should have_link('Request a password reset?', href: forgot_password_path) }
+    end
+
+    describe "forgot_password_page" do
+      it { should have_title("Forgot Password") }
+    end
+    
+    describe "with invalid email" do
+      before do
+        fill_in "user_name",             with: "test6868787@test2373274.de"
+        click_button submit
+      end
+      
+      it { should have_content("Name/Email not found") }
+      it { should have_title("Forgot Password") }
+    end
+    
+    describe "with invalid name" do
+      before do
+        fill_in "user_name",             with: "Hans Meier 234"
+        click_button submit
+      end
+      
+      it { should have_content("Name/Email not found") }
+      it { should have_title("Forgot Password") }
+    end
+    
+    describe "with valid name" do
+      before do
+        fill_in "user_name",             with: user.name
+        click_button submit
+      end
+      
+      it { should have_content("Email sent with password reset instructions.") }
+      it { should have_content("home page") }
+    end
+    
+    describe "with valid email" do
+      before do
+        fill_in "user_name",             with: user.email
+        click_button submit
+      end
+      
+      it { should have_content("Email sent with password reset instructions.") }
+      it { should have_content("home page") }
+    end
+  end 
   
-  end
+  describe "reset_password" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:submit) { "Send Password Reset Instructions" }
+    
+    describe "reset password page with incorrect token" do
+      before { visit password_reset_path(:id => "12389")}
+      it { should have_content("You have not requested a password reset.") }
+      it { should have_title("") }
+    end
+    
+    describe "reset password page with correct token" do
+      before { visit password_reset_path(:id => user.password_reset_token) }
+      it { should have_content("Password Reset") }
+      it { should have_title("Password Reset") }
+      it { should have_content("requested a password reset") }
+    end
+  end 
+  
+  #TODO Reset the password with incorrect password length
+  #TODO Reset the password with incorrect password confirmation
+  #TODO Reset the password with correct password & login with new PW
+  
+  
 end

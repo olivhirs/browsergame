@@ -7,5 +7,11 @@ class UserMailer < ActionMailer::Base
     @site_name = "Fire&RescueGame"
     mail(:to => email_with_name, :subject => "Welcome to Fire&RescueGame")
   end
+  
+  def password_reset(user)
+    @user = user
+    email_with_name = "#{@user.name} <#{@user.email}>" 
+    mail(:to => email_with_name, :subject => "Fire&RescueGame - Password Reset")
+  end
 
 end
