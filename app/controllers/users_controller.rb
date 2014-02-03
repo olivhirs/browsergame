@@ -13,10 +13,9 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      UserMailer.welcome_email(@user).deliver
-      sign_in @user
-      flash[:success] = "Welcome to the Fire&RescueGame!"
-      redirect_to @user
+      @user.send_email_confirmation
+      flash[:success] = "Welcome to the Fire&RescueGame! Please confirm your email address."
+      redirect_to root_url
     else
       render 'new'
     end
@@ -67,12 +66,22 @@ class UsersController < ApplicationController
     
   def new_password
     @user = User.find_by_password_reset_token!(params[:id])
-    if @user.password_reset_sent_at < 2.hours.ago
+    if @user != nil && @user.password_reset_sent_at < 2.hours.ago
       redirect_to password_reset_path(:id => @user.password_reset_token), :alert => "Password reset has expired."
-    elsif @user.update_attributes(user_params)
+    elsif @user != nil && @user.update_attributes(user_params)
       redirect_to root_url, :notice => "Password has been reset!"
     else
       render 'password_reset'
+    end
+  end
+  
+  def email_confirmation
+    @user = User.find_by_email_confirmation_token!(params[:id])
+    if @user != nil && @user.update_attribute(:email_confirmation,true)
+      redirect_to root_url, :notice => "Email confirmed. Please sign in!"
+    else
+      flash[:error] = "Email confirmation failed. Please contact us!"
+      redirect_to root_url
     end
   end
 
@@ -84,7 +93,6 @@ class UsersController < ApplicationController
     end
 
     # Before filters
-
     def signed_in_user
       unless signed_in?
         store_location

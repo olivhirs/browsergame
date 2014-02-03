@@ -27,6 +27,13 @@ class User < ActiveRecord::Base
     UserMailer.password_reset(self).deliver
   end
   
+  def send_email_confirmation
+    generate_token(:email_confirmation_token)
+    self.update_attribute(:email_confirmation_token, self.email_confirmation_token)
+    self.update_attribute(:email_confirmation, false)
+    UserMailer.email_confirmation(self).deliver
+  end
+  
   private
 
     def create_remember_token

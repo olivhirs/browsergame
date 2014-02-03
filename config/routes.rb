@@ -14,6 +14,8 @@ Browsergame::Application.routes.draw do
 
   match "/password_reset",  to: "users#password_reset", via: 'get'
   match "/password_reset",  to: "users#new_password", via: 'patch'
+  
+  match "/email_confirmation",  to: "users#email_confirmation", via: 'get'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -13,5 +13,11 @@ class UserMailer < ActionMailer::Base
     email_with_name = "#{@user.name} <#{@user.email}>" 
     mail(:to => email_with_name, :subject => "Fire&RescueGame - Password Reset")
   end
+  
+  def email_confirmation(user)
+    @user = user
+    email_with_name = "#{@user.name} <#{@user.email}>" 
+    mail(:to => email_with_name, :subject => "Fire&RescueGame - Email confirmation")
+  end
 
 end
