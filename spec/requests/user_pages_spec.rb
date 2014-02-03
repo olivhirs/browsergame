@@ -163,11 +163,57 @@ describe "User pages" do
       it { should have_title("Password Reset") }
       it { should have_content("requested a password reset") }
     end
+    
+    describe "reset password page with incorrect password length" do      
+      before do
+          visit password_reset_path(:id => user.password_reset_token)
+          fill_in "Password",         with: "12345"
+          fill_in "user_password_confirmation", with: "12345"
+          click_button "Update Password"
+        end
+      
+      it { should have_content("error") }
+      it { should have_title("Password Reset") }
+      it { should have_content("requested a password reset") }
+    end
+    
+    describe "reset password page with incorrect password confirmation" do
+      before do
+          visit password_reset_path(:id => user.password_reset_token)
+          fill_in "Password",         with: "Test12345"
+          fill_in "user_password_confirmation", with: "Test123"
+          click_button "Update Password"
+        end
+      
+      it { should have_content("error") }
+      it { should have_title("Password Reset") }
+      it { should have_content("requested a password reset") }
+    end
+    
+    describe "reset password page with expired token" do
+      let(:wrong_user) { FactoryGirl.create(:user, password_reset_sent_at: Time.now - 3.hours) }
+      before do
+        visit password_reset_path(:id => wrong_user.password_reset_token)
+        fill_in "Password",         with: "Test12345"
+        fill_in "user_password_confirmation", with: "Test12345"
+        click_button "Update Password"
+      end
+      
+      it { should have_content("Password reset has expired.") }
+      it { should have_title("Password Reset") }
+      it { should have_content("requested a password reset") }
+    end
+    
+    describe "reset password page with correct password" do
+      before do
+          visit password_reset_path(:id => user.password_reset_token)
+          fill_in "Password",         with: "Test12345"
+          fill_in "user_password_confirmation", with: "Test12345"
+          click_button "Update Password"
+        end
+      
+      it { should have_content("Password has been reset!") }
+      it { should have_title("") }
+    end
   end 
-  
-  #TODO Reset the password with incorrect password length
-  #TODO Reset the password with incorrect password confirmation
-  #TODO Reset the password with correct password & login with new PW
-  
-  
 end

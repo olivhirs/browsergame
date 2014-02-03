@@ -49,8 +49,6 @@ class UsersController < ApplicationController
   
     if user
       user.send_password_reset if user
-      puts "user: " + user.name.to_s
-      puts "user password_reset_token: " + user.password_reset_token.to_s
       redirect_to root_url, :notice => "Email sent with password reset instructions."
     else
       @user = User.new
@@ -61,19 +59,16 @@ class UsersController < ApplicationController
 
   def password_reset
     @user = User.find_by_password_reset_token(params[:id])
-  puts "params[:id]: " + params[:id].to_s
     if @user.nil?
       redirect_to root_url, :alert => "You have not requested a password reset."
-      puts "NICHT OK"
       return
     end
-  puts "OK"
   end
     
   def new_password
     @user = User.find_by_password_reset_token!(params[:id])
     if @user.password_reset_sent_at < 2.hours.ago
-      redirect_to password_reset_path, :alert => "Password reset has expired."
+      redirect_to password_reset_path(:id => @user.password_reset_token), :alert => "Password reset has expired."
     elsif @user.update_attributes(user_params)
       redirect_to root_url, :notice => "Password has been reset!"
     else
