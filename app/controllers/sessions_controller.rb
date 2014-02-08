@@ -14,6 +14,7 @@ class SessionsController < ApplicationController
         render 'new'
       end
     else
+      user.update_attribute(:incorrect_sign_in_counter, user.incorrect_sign_in_counter != nil ? (user.incorrect_sign_in_counter + 1) : 1) if user
       flash.now[:error] = 'Invalid email/password combination'
       render 'new'
     end

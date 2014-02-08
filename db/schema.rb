@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140203174157) do
+ActiveRecord::Schema.define(version: 20140208214901) do
 
   create_table "users", force: true do |t|
     t.string   "name"
@@ -24,6 +24,10 @@ ActiveRecord::Schema.define(version: 20140203174157) do
     t.datetime "password_reset_sent_at"
     t.boolean  "email_confirmation"
     t.string   "email_confirmation_token"
+    t.datetime "last_sign_in_date"
+    t.datetime "last_activity_date"
+    t.integer  "sign_in_counter"
+    t.integer  "incorrect_sign_in_counter"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

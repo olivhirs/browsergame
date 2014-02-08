@@ -102,6 +102,7 @@ class UsersController < ApplicationController
 
     def correct_user
       @user = User.find(params[:id])
+      @user.update_attribute(:last_activity_date, Time.now) if @user
       redirect_to(root_url) unless current_user?(@user)
     end
 end

@@ -20,6 +20,10 @@ describe User do
   it { should respond_to(:password_reset_sent_at) }
   it { should respond_to(:email_confirmation) }
   it { should respond_to(:email_confirmation_token) }
+  it { should respond_to(:last_sign_in_date) }
+  it { should respond_to(:last_activity_date) }
+  it { should respond_to(:sign_in_counter) }
+  it { should respond_to(:incorrect_sign_in_counter) }
 
   it { should be_valid }
 

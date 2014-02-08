@@ -3,6 +3,9 @@ module SessionsHelper
     remember_token = User.new_remember_token
     cookies.permanent[:remember_token] = remember_token
     user.update_attribute(:remember_token, User.encrypt(remember_token))
+    user.update_attribute(:last_sign_in_date, Time.now)
+    user.update_attribute(:last_activity_date, Time.now)
+    user.update_attribute(:sign_in_counter, user.sign_in_counter != nil ? (user.sign_in_counter + 1) : 1)
     self.current_user = user
   end
   
