@@ -22,6 +22,18 @@ describe "Authentication" do
       end
     end
     
+    describe "with invalid email confirmation" do
+      let(:wrong_user) { FactoryGirl.create(:user, email_confirmation: false) }
+      before do
+        fill_in "Email",    with: wrong_user.email.upcase
+        fill_in "Password", with: wrong_user.password
+        click_button "Sign in"
+      end
+
+      it { should have_title('Sign in') }
+      it { should have_content('Email address is not confirmed') }
+    end
+    
     describe "with valid information" do
       let(:user) { FactoryGirl.create(:user) }
       before do

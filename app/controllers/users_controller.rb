@@ -76,7 +76,7 @@ class UsersController < ApplicationController
   end
   
   def email_confirmation
-    @user = User.find_by_email_confirmation_token!(params[:id])
+    @user = User.find_by_email_confirmation_token(params[:id])
     if @user != nil && @user.update_attribute(:email_confirmation,true)
       redirect_to root_url, :notice => "Email confirmed. Please sign in!"
     else

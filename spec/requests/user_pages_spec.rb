@@ -47,9 +47,9 @@ describe "User pages" do
         before { click_button submit }
         let(:user) { User.find_by(email: 'user@example.com') }
 
-        it { should have_link('Sign out') }
-        it { should have_title(user.name) }
-        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+        it { should have_link('Sign in') }
+        it { should have_title("") }
+        it { should have_selector('div.alert.alert-success', text: 'Please confirm your email address') }
       end
     end
     
@@ -213,6 +213,22 @@ describe "User pages" do
         end
       
       it { should have_content("Password has been reset!") }
+      it { should have_title("") }
+    end
+  end
+  
+  describe "email confirmation" do
+    let(:user) { FactoryGirl.create(:user) }
+    
+    describe "email confirmation page with incorrect token" do
+      before { visit email_confirmation_path(:id => "foo") }
+      it { should have_content("Email confirmation failed. Please contact us") }
+      it { should have_title("") }
+    end
+    
+    describe "email confirmation page with correct token" do
+      before { visit email_confirmation_path(:id => user.email_confirmation_token) }
+      it { should have_content("Email confirmed. Please sign in") }
       it { should have_title("") }
     end
   end 
